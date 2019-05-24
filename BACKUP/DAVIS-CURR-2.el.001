@@ -1,0 +1,133 @@
+;;(global-set-key (kbd "C->")       'indent-code-rigidly)
+;;(set-mark p1)
+
+  :beg    x
+       111
+          222
+    :end
+
+(defun shift-right (beg end)
+  (interactive "r") 
+  (cond
+   (mark-active
+           (let*((deactivate-mark))        ;; BINGO : https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Mark.html
+             (indent-code-rigidly beg end 1)
+             ))
+   (t
+           (prin1 (fmt "[mark not active]" )))))
+
+(defun shift-left (beg end)
+  (interactive "r") 
+  (cond
+   (mark-active
+           (let*((deactivate-mark))        ;; BINGO : https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Mark.html
+             (indent-code-rigidly beg end -1)
+             ))
+   (t
+           (prin1 (fmt "[mark not active]" )))))
+
+(global-set-key (kbd "<M-s-right>")        'shift-right)
+(global-set-key (kbd "<M-s-left>")        'shift-left)
+
+
+
+
+
+
+;;(defun x () (interactive)
+;;  (let*(b e)
+;;    ;; :d - setup for test
+;;    (goto (pt-min))
+;;    (srch-> ":beg")   (! b    (bol-pos))
+;;    (srch-> ":end")   (! e    (eol-pos))
+;;    (set-mark b)
+;;    (goto e)
+;;    (let*((act1      (lambda ()
+;;                       (prin1 (fmt "[act1]\n" ))
+;;                       (let*((deactivate-mark))         ;; BINGO : https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Mark.html
+;;                         (indent-code-rigidly (r-beg) (r-end) 1)
+;;                         ;;(set-mark-command)
+;;                         
+;;                         )))
+;;          (act2      (lambda ()
+;;                       (prin1 (fmt "[act2] - mark not active\n" ))
+;;                       ))
+;;          )
+;;        (if mark-active
+;;            (call act1)
+;;          (call act2))
+;;      
+;;      )
+;;    ))x
+;;
+;;(defun x () (interactive) ;;(/c)
+;;  (let*()
+;;    (prin1 (fmt "[%s]\n" deactivate-mark ))
+;;    ;;(push-mark 20)
+;;    (ins "x")
+;;    (! deactivate-mark nil)             ;;/ BINGO : https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Mark.html
+;;    (goto 1)
+;;    (push-mark 4)
+;;    (setq mark-active t)
+;;    
+;;    ))
+;;
+;;(defun x (b e)
+;;  ;;(interactive "r")
+;;  (interactive `(,(r-beg) ,(r-end)))
+;;  (let*()
+;;    ;;(prin1 (fmt "1> %s %s\n" b  e))
+;;    (if mark-active
+;;        (let*()
+;;          (prin1 (fmt "[1] \n" ))
+;;          (save-excursion
+;;            (set-mark-command )
+;;            ))
+;;      (let*()
+;;        (prin1 (fmt "[2]\n" ))))
+;;    ))
+;;
+;;
+;;
+;;
+;;(defun x () (interactive) ;;(/c)
+;;       (let*()
+;;         ;;(prin1 (fmt "%s  %s  %s  %s\n"  mark-active (r-beg)  (r-end)  (mark)))
+;;    ))
+;;
+;;;;(global-set-key (kbd "<M-s-right>")        'x)
+;;;;(global-set-key (kbd "<M-s-right>")        'shift-right)
+;;;;(global-set-key (kbd "<M-s-left>")         'x)
+;;
+;;
+;;   ;; aaaaaaa
+;;   ;; bbbbbbbb
+;;
+;;(defun x () (interactive) ;;(/c)
+;;  (let*()
+;;    (shift-right)
+;;    ))
+;;
+;;;;/ NEXT: ??? right/left commands -- w/ key assignments
+;;(defun shift-cur-reg (amt)  ;; GOOD
+;;  ;;(let*((rng        (sort  `(,(pt) ,(mark))  '<))   ;; :d nice code - but unnecessary
+;;  ;;      (args       `(,@rng ,amt)))
+;;  ;;  (apply 'indent-code-rigidly args))
+;;  (if mark-active
+;;      (indent-code-rigidly (r-beg) (r-end) amt)))
+;;
+;;
+;;
+;;
+;;
+;;
+;;;;==========================
+;;(defun x () (interactive)
+;;  (let*(p1 p2 p3)        
+;;    (goto (pt-min)) (srch-> ":beg")
+;;    (! p1              (+ (bol-pos) 1))
+;;    (srch-> ":end")
+;;    (! p2              (pt))    
+;;    (indent-code-rigidly p1 p2 2)
+;;    (prin1 (fmt "[%s] %s\n" p1 p2))
+;;    ))

@@ -1,0 +1,495 @@
+;;////////////////////////////////////////
+
+;; find -name "*.el" -exec grep test {} \;
+
+;; find  . -name "*.py" -print -exec fgrep hello {} \;
+;;      * (:tag   KEY  LESSON)
+;;      * from: https://unix.stackexchange.com/questions/12902/how-to-run-find-exec
+
+;;/////////////////////////////
+
+;; next:    ctrl-x  -- kill ??
+
+(add-to-list 'load-path "/sto/ff-cfg/emacs")
+
+
+;; ===============================================================
+;; intial grounding -- for sanity
+(global-set-key (quote [f1]) 'buffer-menu)
+(global-set-key "" (quote yank))
+
+
+
+
+
+;; ===============================================================
+;; setup color scheme
+             ;;|| see:  https://wikemacs.org/wiki/Zenburn-theme
+;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+;;(add-to-list 'custom-theme-load-path "/sto/ff-cfg")
+(add-to-list 'custom-theme-load-path "/sto/ff-cfg")
+(load-theme 'zenburn t)
+
+;; ===============================================================
+(require 'dlm)
+;;(require 'dlm2)
+
+;; ================================================================
+;;  to setup comment handling
+(require 'comments)
+(global-set-key      '[M-f11]     'd-ins-comm)       ; Alt-F11
+(global-set-key      '[s-f11]     'd-rm-comm)        ; Win-F11
+;(cond
+;  ((equal 'gnu/linux system-type)
+;      (global-set-key      '[s-f11]     'd-rm-comm))       ; Win-F11
+;  ((equal 'windows-nt system-type) 
+;       (global-set-key     '[C-f11]     'd-rm-comm) ))     ; Ctl-F11
+
+
+;; ================================================================
+;;  to setup plate-util3
+;;(require 'plate-util3)
+;;(defvar *my-mode-plate-dir-alist*  (list
+;;  ;;| note: the new subdir name convetion for the new plate format
+;;  ;;| is 'plate.as-dat'
+;;  (cons    "elisp"         "/sto/elisp/plate.as-dat")
+;;  )
+;;;  ":dm
+;;;   what   : assoc list of (my) mode names that map to the corresponding 
+;;;            template dir paths. 
+;;;            WARNING: must restart Emacs to see changes.
+;;;  "
+;;  )
+;;(defvar plate-names nil "")
+;;(setq plate-names nil)
+;;(dolist (r *my-mode-plate-dir-alist*)
+;;  (setq  plate-names  (cons (car r) plate-names)))
+;;(global-set-key (quote "\M-p") (quote d-insert-plate3))      ;A-p
+;;(global-set-key (quote "\C-p") (quote d-select-plate-root)) ;C-p
+
+
+;; ====================================================
+;; 5/10/19 : some of my standard defines/aliaes
+
+(defalias 'bound?          'boundp)
+(defalias 'fbound?         'fboundp)
+(defalias 'function?       'functionp)
+(defalias 'eq?             'eq)
+(defalias 'equal?          'equalp)
+(defalias '!          'setq)
+(defalias 'ƛ          'lambda)
+(defalias '𝝺          'lambda)
+(defalias '<-         'setq)
+(defalias 'list?      'listp)
+(defalias 'cons?      'consp)
+(defalias 'symbol?    'symbolp)
+(defalias 'sym?       'symbolp)
+(defalias 'empty?     'null)
+(defalias 'int?       'integerp)
+(defalias 'num?       'numberp)
+(defalias 'float?     'floatp)
+(defmacro take (lst n)     `(butlast   ,lst    (- (len ,lst) ,n)))
+(defmacro drop (lst n)     `(nthcdr ,n ,lst))
+(defalias 'take-right      'last)
+(defalias 'drop-right      'butlast)
+(defalias 'call   'funcall)
+;;(defalias '☀      'funcall)
+(defalias '⊙      'funcall)
+(defalias 'err    'error)
+(defalias 'fmt-time-str  'format-time-string)  ;; (fmt-time-str "%H:%M:%S")
+(defalias 'make-hard-link  'add-name-to-file)
+(defalias 'r-start    'region-beginning)
+(defalias 'r-beg      'region-beginning)
+(defalias 'r-end      'region-end)
+(defalias 'reg-start  'region-beginning)
+(defalias 'reg-beg    'region-beginning)
+(defalias 'reg-end    'region-end)
+(defalias 'p     'princ)
+(defalias 'strf  'format)
+(defalias 'fmt   'format)
+(defalias 'f     'format)
+(defalias 'else  'progn)
+(defalias 'str=  'string=)
+(defalias 'str=? 'string=)
+(defalias 'str?  'stringp)
+(defalias 'str+  'concat)
+(defalias 'len   'length)
+(defalias 'str->num      'string-to-number)
+(defalias 'sym->str      'symbol-name)
+(defalias 'str->sym      'intern)
+(defalias 'sym?          'symbolp)
+;;(defalias 'buf-str     'buffer-substring)
+(defalias 'buf-substr    'buffer-substring)
+(defalias 'buf-str       'buffer-substring)
+(defalias 'buf           'buffer-substring)
+(defalias 'buf-substr-wo 'buffer-substring-no-properties)
+(defalias 'buf-str-wo    'buffer-substring-no-properties)
+(defalias 'buf-str*      'buffer-substring-no-properties)
+(defalias 'buf*          'buffer-substring-no-properties)
+(defalias 'del-region  'delete-region)
+(defalias 'del-reg     'delete-region)
+(defalias 'erase-buf   'erase-buffer)
+(defalias 'thing-at-pt 'thing-at-point)
+(defun thing-at-pt* (thing)
+  (let*((itm     (thing-at-point thing) ))
+    (if itm  (substr-wo itm)  nil)))
+(defalias 'goto         'goto-char)
+(defalias 'srch->       'search-forward)
+(defalias 'srch-<       'search-backward)
+(defalias 'srch-re->    're-search-forward)
+(defalias 'srch-re-<    're-search-backward)
+(defalias 're->         're-search-forward)
+(defalias 're-<         're-search-backward)
+;;(defalias 'srch-re-str  'string-match)
+(defalias 'str-match       'string-match) 
+(defalias 're-str-match    'string-match) 
+(defalias 're/str          'string-match) 
+;;/  :flow
+(defalias 'cond-case       'condition-case)
+
+;;/  :list
+
+;;/  :vector
+(defalias 'vector?         'vectorp)
+(defalias 'vec?            'vectorp)
+(defalias 'vec             'vector)
+(defalias 'make-vec        'make-vector)
+
+;;/  :alist
+(defalias 'alist-del/keys     'assq-delete-all 
+  ":d - alias for assq-delete-all.
+Deletes (all entries) from an alist by key")
+(defalias 'alist-del/vals     'rassq-delete-all 
+  ":d - alias for assq-delete-all.
+Deletes (all entries) from an alist by value")
+(defalias 'tref  'assq)
+(defun tref.  (key tlist)   
+  (cdr (assq key tlist)))
+(defmacro assc-val (key alist)
+  `(cdr (assoc ,key ,alist)) )
+(defmacro assq-val (key alist)
+  `(cdr (assq ,key ,alist)) )
+(defalias 'aget    'assoc)
+(defalias 'agetq   'assq)
+(defalias 'tget    'assq)             ;;/ ??????
+(defmacro  agetv (key alist)
+  `(cdr (assoc ,key ,alist)) )
+(defmacro  agetqv (key alist)
+  `(cdr (assq ,key ,alist)) )
+
+;;/ :dm - DAVIS: need to study how SETCDR works -- it is destructive -- see doc
+;;/ it seams to be like SETF (common lisp) or SET (of elisp)
+(defmacro aput (name val alist)
+    `(setcdr   (aget ,name ,alist) ,val) )
+(defmacro aputq (name val alist)
+    `(setcdr   (agetq ,name ,alist) ,val) )
+;; aval-append -- needs much more testing
+;; appends val to the curr val of an alist entry
+(defmacro aval-append (key val alist)
+    `(let* ( (kv-pair  (assoc ,key ,alist)) )
+    (setcdr kv-pair  
+          (append (cdr kv-pair)
+                  (list  ,val) )) ))
+
+;;/  :string / :char
+(defalias 'split-str        'split-string) 
+(defalias 'str-split        'split-string)       ;;/ ???????? 
+(defalias 'str->list        'string-to-list)
+(defalias 'match-str        'match-string)
+(defalias 'ch=?             'char-equal)
+(defalias 'char?            'characterp)
+(defalias 'ch?              'characterp)
+(defalias 'substr-wo        'substring-no-properties)
+(defalias 'substr*          'substring-no-properties)
+
+;;/  :hash
+(defalias 'make⋕         'make-hash-table)
+(defalias '⋕?            'hash-table-p)
+(defalias 'put⋕          'puthash)
+(defalias 'get⋕          'gethash)
+(defalias 'clr⋕          'clrhash)
+(defalias '⋕count        'hash-table-count)
+(defalias 'count⋕        'hash-table-count)
+(defalias 'map⋕          'maphash)
+
+(defalias '⋕!            'puthash)
+(defalias '⋕             'gethash)
+(defalias 'make-⋕        'make-hash-table)
+
+
+;;/  :motion
+;;    -- Function: skip-chars-forward character-set &optional limit
+;;    -- Function: skip-chars-backward character-set &optional limit
+
+(defalias 'skip-chars->             'skip-chars-forward)
+(defalias 'skip-chars-<             'skip-chars-backward)
+;;(defalias '>-ch         'forward-char)
+;;(defalias '<-ch         'backward-char)
+;;(defalias '>-line       'forward-line)
+;;(defalias '<-line       'backward-line)
+
+
+
+(defalias 'fwd-ch         'forward-char)
+(defalias 'bak-ch         'backward-char)
+(defalias 'fwd-line       'forward-line)
+;;(defalias 'bak-line       'backward-line) ;;| no such func BACKWARD-LINE
+
+
+(defalias 'cur-col      'current-column)
+(defalias 'goto-col     'move-to-column)
+
+(defalias 'bol          'beginning-of-line)
+(defalias 'bol-pos      'line-beginning-position)
+(defalias 'eol          'end-of-line)
+(defalias 'eol-pos      'line-end-position)
+
+(defalias 'line-num-at    'line-number-at-pos)
+(defalias 'pos->line-num  'line-number-at-pos)
+
+
+(defalias 'del-ch       'delete-char)
+(defalias 'make-str     'make-string)
+
+(defalias 'read-str          'read-string)
+
+(defalias 'ins     'insert)
+
+(defalias 'replace-re-in-str  'replace-regexp-in-string)
+(defalias 'm-start 'match-beginning)
+(defalias 'm-beg   'match-beginning)
+(defalias 'm-end   'match-end)
+(defalias 'replace-m  'replace-match)
+(defalias 'match-str  'match-string)
+(defalias 'm-str      'match-string)
+
+
+(defalias 'pt       'point)
+(defalias 'pt-max   'point-max)
+(defalias 'pt-min   'point-min)
+
+(defalias 'marker?       'markerp)
+(defalias 'marker-pos    'marker-position)
+(defalias 'mrk-pos       'marker-position)
+(defalias 'pt-mrk        'point-marker)
+(defalias 'cp-mrk        'copy-marker)
+
+(defalias 'sym-val    'symbol-value)
+(defalias 'sym-fun    'symbol-function)
+(defalias 'sym-func   'symbol-function)
+(defalias 'sym-name   'symbol-name)
+
+(defalias 'msg        'message)
+(defalias 'x-set-sel  'x-set-selection)
+
+(defalias '∿ 'assq)
+
+(defalias 'keymap?     'keymapp)
+
+;;;;/  :buffer
+(defalias 'buffer?                'bufferp)
+(defalias 'cur-buf                'current-buffer)
+(defalias 'buf-name               'buffer-name)
+(defalias 'buf-list               'buffer-list)
+(defalias 'set-buf                'set-buffer)
+(defalias 'switch-to-buf          'switch-to-buffer)
+(defalias 'swtch-2-buf            'switch-to-buffer)
+(defalias 'switch-2-buf           'switch-to-buffer)
+(defalias 'switch-to-buf-other-win  'switch-to-buffer-other-window)
+(defalias 'switch-2-buf-other-win   'switch-to-buffer-other-window)
+;;(defalias 'swtch-2-buf-other-win  'switch-to-buffer-other-window)
+(defalias 'pop-to-buf             'pop-to-buffer)
+(defalias 'replace-buf-in-win     'replace-buffer-in-windows)
+(defalias 'get-buf                'get-buffer)
+(defalias 'get-buf-create         'get-buffer-create)
+(defalias 'with-cur-buf           'with-current-buffer)
+(defalias 'with-buf               'with-current-buffer)
+(defalias 'with-temp-buf          'with-temp-buffer)
+(defalias 'kill-buf               'kill-buffer)
+(defalias 'erase-buf              'erase-buffer)
+;;(defalias 'erase-buf*             'erase-buffer*)
+(defalias 'buf-size               'buffer-size)
+(defalias 'buf-sz                 'buffer-size)
+
+(defalias 'make-local-var         'make-local-variable)
+    ;;/  usage:  (set (make-local-var 'foo) "value")  --  :dm consider higer level MAKE-BUF-VAR
+(defalias 'buf-modified?          'buffer-modified-p)
+(defalias 'set-buf-modified       'set-buffer-modified-p)
+;;(defalias 'set-buf-not-modified   'not-modified)         ;;/ :dm  ???????
+(defalias 'buf-modified-cnt       'buffer-modified-tick)
+(defalias 'buf-chars-modified-cnt 'buffer-chars-modified-tick)
+(defalias 'bob?  'bobp)
+(defalias 'eob?  'eobp)
+(defalias 'bol?  'bolp)
+(defalias 'eol?  'eolp)
+
+
+;;/  :window
+(defalias 'window?                'windowp)
+(defalias 'win-buf                'window-buffer)
+(defalias 'get-buf-win            'get-buffer-window)
+(defalias 'buf-win                'get-buffer-window)
+
+(defalias 'cur-win-config         'current-window-configuration)
+(defalias 'set-win-config         'set-window-configuration)
+(defalias 'save-win-excursion     'save-window-excursion)
+(defalias 'win-config?            'window-configuration-p)
+(defalias 'selected-win           'selected-window)
+(defalias 'cur-win                'selected-window)
+(defalias 'select-win             'select-window)
+(defalias 'save-selected-win      'save-selected-window)
+(defalias 'with-selected-win      'with-selected-window)
+(defalias 'with-win               'with-selected-window)
+(defalias 'get-lru-win            'get-lru-window)
+(defalias 'get-largest-win        'get-largest-window)
+(defalias 'get-win-with-pred      'get-window-with-predicate)
+(defalias 'next-win               'next-window)
+(defalias 'previous-win           'previous-window)
+(defalias 'other-win              'other-window)
+(defalias 'walk-win               'walk-windows)
+(defalias 'win-list               'window-list)
+(defalias 'split-win              'split-window)
+(defalias 'one-win?               'one-window-p)
+(defalias 'win-height             'window-height)
+(defalias 'win-h                  'window-height)
+(defalias 'win-body-height        'window-body-height)
+(defalias 'win-body-h             'window-body-height)
+(defalias 'win-full-height?       'window-full-height-p)
+(defalias 'win-full-h?            'window-full-height-p)
+(defalias 'win-width              'window-width)
+(defalias 'win-w                  'window-width)
+(defalias 'win-full-width?        'window-full-width-p)
+(defalias 'win-full-w?            'window-full-width-p)
+(defalias 'win-edges              'window-edges)
+(defalias 'win-inside-edges       'window-inside-edges)
+(defalias 'win-pix-edges          'window-pixel-edges)
+(defalias 'win-inside-pix-edges   'window-inside-pixel-edges)
+(defalias 'win-at                 'window-at)
+(defalias 'in-win?                'coordinates-in-window-p)
+(defalias 'del-other-wins         'delete-other-windows)
+
+;;/  :frame
+(defalias 'frame?                 'framep)
+(defalias 'set-frame-parm         'set-frame-parameter)
+(defalias 'frame-parm             'frame-parameter)
+(defalias 'frame-selected-win     'frame-selected-window)
+(defalias 'set-frame-selected-win 'set-frame-selected-window)
+(defalias 'del-frame              'delete-frame)
+
+
+;;/  :properties (text)
+(defun h/text-prop ()   ;;/ :dm - use DESCRIBE-FUNCTION as help
+  "LIST:
+  get-text-prop
+  text-prop
+  prop
+  text-props-at
+  props
+  text-prop-vals
+  default-text-props
+  default-props
+  put-text-prop
+  text-prop!
+  prop!
+  add-text-props
+  text-props+!              : adds to existing props (or sets existing)
+  props+!
+  rem-text-props
+  rem-props
+  set-text-props            : completely replaces exisiting props
+  text-props!               : same as SET-TEXT-PROPS
+  props!                    : same as SET-TEXT-PROPS
+  ... (more - see .emacs) ....
+"
+  (interactive)  nil)
+
+(defalias 'get-text-prop          'get-text-property)
+(defalias 'text-prop              'get-text-property)
+(defalias 'prop                   'get-text-property)        ;;/ new
+
+(defalias 'text-props-at          'text-properties-at)
+(defalias 'text-props             'text-properties-at)
+(defalias 'props                  'text-properties-at)       ;;/ new
+
+(defalias 'default-text-props     'default-text-properties)
+(defalias 'default-props          'default-text-properties)   ;;/ new
+
+(defalias 'put-text-prop          'put-text-property)
+(defalias 'text-prop!             'put-text-property)
+(defalias 'prop!                  'put-text-property)        ;;/ new
+
+(defalias 'add-text-props         'add-text-properties)
+(defalias 'text-props+!           'add-text-properties)
+(defalias 'props+!                'add-text-properties)      ;;/
+;;(defalias 'rem-text-props         'remove-text-properties)   ;;/ :dm see info for diff
+;;(defalias 'rem-text-props-list    'remove-list-of-text-properties)
+(defalias 'rem-text-props         'remove-list-of-text-properties)
+(defalias 'rem-props              'remove-list-of-text-properties)   ;;/ new
+(defalias 'set-text-props         'set-text-properties)
+(defalias 'text-props!            'set-text-properties)
+(defalias 'props!                 'set-text-properties)              ;;/ new
+;;(defalias 'propertize     'propertize)
+(defalias 'next-1-prop-delta      'next-single-property-change)
+(defalias 'prev-1-prop-delta      'previous-single-property-change)
+
+;;/  :system
+(defalias 'file-name-base         'file-name-sans-extension)
+(defalias 'file-name-ext          'file-name-extension)
+(defalias 'file-path->file-name   'file-name-nondirectory)
+(defalias 'path->file-name        'file-name-nondirectory)
+(defalias 'file-path->dir-path    'file-name-directory)
+(defalias 'path->dir-path         'file-name-directory)
+
+(defalias 'buf-file-path          'buffer-file-name)
+(defalias 'buf->path              'buffer-file-name)
+(defalias 'dir-files              'directory-files)
+(defalias 'dir-files-and-attrs    'directory-files-and-attributes)
+;;(defalias 'file-exists?     'file-exists-p)   ;;/ true for both dir and file
+(defalias 'file/dir-exists?       'file-exists-p)
+(defalias 'dir-exists?            'file-directory-p)
+(defalias 'file-exists?           'file-regular-p)
+;;(defalias 'default-dir            'default-directory) ;;/ :dm is a var not a function
+(defalias 'symlink?               'file-symlink-p)
+
+
+(defalias 'reg-file?  'file-regular-p)
+(defun link/broken? (p)
+  (and (symlink?  p)
+       (not (reg-file? p))
+       (not (dir-exists? p))))
+(defun link/2-reg-file? (p)
+  (and (symlink?  p)
+       (reg-file? p)
+       (not (dir-exists? p))))
+(defun link/2-dir? (p)
+  (and (symlink?  p)
+       (not (reg-file? p))
+       (dir-exists? p)))
+(defun pipe? (p)
+  (and (not (symlink?  p))
+       (not (reg-file? p))
+       (not (dir-exists? p))))
+
+
+
+
+
+;; ====================================================
+;; settings managed by emacs
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(truncate-lines t))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+;; ====================================================
+
+
