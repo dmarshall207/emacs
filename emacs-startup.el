@@ -1,4 +1,13 @@
+
 ;;////////////////////////////////////////
+
+;; to be/come aware of:
+
+;;  cmd:  'completion-at-point : default:  M-tab
+
+;;////////////////////////////////////////
+
+
 
 ;;https://www.emacswiki.org/emacs/PrefixKey
 ;;https://www.emacswiki.org/emacs/PrefixKeymaps
@@ -95,7 +104,6 @@
 
 (add-to-list 'load-path "/sto/ff-cfg/emacs")
 
-
 ;; ===============================================================
 ;; intial grounding -- for sanity
 (global-set-key (quote [f1]) 'buffer-menu)
@@ -110,7 +118,6 @@
 (load-theme 'zenburn t)
 
 ;; ==================================================================
-;; :here1
 
 (require 'defines1)   ;; generial / "aliases"
 (require 'defines2)   ;; plist   -- ?? combine with define6 ?? 
@@ -127,9 +134,6 @@
 (require 'align-to-col)
 (global-set-key (kbd "C-a C-s")     'd-set-to-col)
 (global-set-key (kbd "C-a C-a")     'd-align-to-col)
-
-
-;; ===============================================================
 (require 'dlm)
 ;;(require 'dlm2)
 
@@ -176,9 +180,13 @@
  ;; If there is more than one, they won't work right.
  )
 ;; ====================================================
-
 ;;(global-set-key (quote [f12]) (quote call-last-kbd-macro))
 (global-set-key (kbd "<f12>")       'call-last-kbd-macro)
-
-(global-set-key (kbd "C->")       'indent-code-rigidly)
-
+(global-set-key (kbd "C->")         'indent-code-rigidly)
+(global-set-key (kbd "C-d")         'keyboard-quit) ;; 'C-d' default is 'delete-char
+;; ====================================================
+(require 'my-edit-tools "./ubu-01.el")
+(global-set-key (kbd "<C-s-right>")     'shift-right)   ;; 'M' = window key
+(global-set-key (kbd "<C-s-left>")      'shift-left)
+;; ====================================================
+(require 'my-frame-tools "./ubu-02.el")
