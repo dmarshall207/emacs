@@ -189,5 +189,5 @@
 (global-set-key (kbd "<C-s-right>")     'shift-right)   ;; 'M' = window key
 (global-set-key (kbd "<C-s-left>")      'shift-left)
 ;; ====================================================
-(require 'my-frame-tools "./ubu-02.el")
+(require 'my-frame-tools "./ubu-02.el") ;; hi
 
