@@ -1,4 +1,16 @@
 
+;;// TEST  --   YES --  IT WORKS
+;;(defvar lexical-binding t)
+(setq-default lexical-binding t)   ;; ??????????????????
+;;(setq lexical-binding t
+
+;;(setq lexical-binding t)
+
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Closures.html
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Lexical-Binding.html#Lexical-Binding
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html
+
+
 ;;////////////////////////////////////////
 
 ;; to be/come aware of:
